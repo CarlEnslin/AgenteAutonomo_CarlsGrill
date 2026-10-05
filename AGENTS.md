@@ -1,22 +1,19 @@
 # Instrucciones para Codex
 
-## Alcance actual
+Este repositorio contiene el componente visual de Carl’s Grill y documentación histórica. El backend completo de INFINITY no está incluido.
 
-El repositorio contiene un esqueleto seguro. No existe aquí un backend verificado. Leer `README.md`, `docs/SOURCE_OF_TRUTH.md` y `docs/BACKEND_IMPORT.md` antes de implementar cambios.
+Leer `README.md`, `docs/CARLS-GRILL-UI.md` y `SECURITY.md` antes de editar.
 
-- No inventar endpoints, dependencias, modelos, migraciones o reglas de negocio para sustituir el código ausente.
-- No tratar un ZIP candidato, una demo, una fecha reciente o un resultado histórico de pruebas como evidencia de despliegue.
-- Mantener separadas las observaciones del servicio unificado y del backend anterior. No reemplazar uno con otro.
-- No copiar paquetes completos, bases, conocimiento privado o logs al repositorio. Incorporar solo archivos individualmente revisados y con procedencia.
-- Preservar la estructura e importaciones del código verificado cuando llegue; `backend/` no impone una reestructuración del runtime.
-- No acceder a bases productivas ni usar credenciales reales para validar este esqueleto. Usar datos sintéticos en pruebas futuras.
-- No ejecutar instaladores recuperados, migraciones, reinicios, cambios de proxy, DNS, webhooks o despliegues como parte de una incorporación de código.
-- No cambiar permisos, audiencia o automatizaciones externas sin el alcance correspondiente.
+- Conservar la integración con la aplicación anfitriona y sus controles de sesión y acceso por negocio.
+- No confundir la identificación visual del nombre de un negocio con autorización.
+- No inventar endpoints, dependencias, reglas de negocio ni datos para sustituir fuentes ausentes.
+- Mantener todas las entradas variables como texto; no insertar HTML recibido de registros.
+- Comprobar el cambio entre negocios, el cierre de sesión, los estados vacíos, los errores y el tamaño móvil.
+- Usar datos sintéticos y un entorno aislado para las pruebas.
+- No publicar credenciales, datos personales, bases, respaldos ni configuración operativa privada.
+- No presentar un enlace al repositorio como sincronización o despliegue automático.
+- La publicación de código y el despliegue son acciones distintas; respetar el alcance autorizado para cada tarea.
+- Trabajar en una rama y preservar cambios ajenos. No forzar actualizaciones del historial.
+- Registrar lo que se comprobó y sus límites. No atribuir pruebas históricas a una ejecución nueva.
 
-## Trabajo y validación
-
-Usar una rama por cambio; conservar cambios ajenos. Identificar la versión de origen y comparar antes de editar. Documentar qué cambió, qué se verificó y qué permanece pendiente.
-
-Actualmente no hay dependencias ni suite de aplicación que instalar o ejecutar. Para cambios documentales, revisar enlaces relativos, coherencia y `git diff --check`. Para incorporar código, añadir comandos de instalación y pruebas únicamente después de comprobarlos en una copia aislada.
-
-Nunca afirmar que una prueba, conexión, integración o despliegue se completó si solo existe una propuesta o evidencia histórica. No publicar resultados privados de diagnósticos. Revisar nombres y contenido del diff antes de enviar cambios a GitHub; no usar `git add -f` para omitir exclusiones de seguridad.
+Para los dos archivos de presentación no hay dependencias de terceros. El comportamiento debe probarse con el contrato del anfitrión; no se incluye aquí una suite completa del backend.
