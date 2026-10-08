@@ -1,0 +1,24 @@
+{
+  "id": "property-villa-santa-rosita-quives",
+  "title": "Villa Santa Rosita de Quives",
+  "kind": "property",
+  "category": "realestate",
+  "status": "TO_CONFIRM",
+  "visibility": "PUBLIC",
+  "source_status": "SOURCE_ONLY",
+  "summary": "Lotes anunciados para casa de campo en Quives. La ficha conserva únicamente datos comerciales respaldados por el volante; precio, disponibilidad, financiamiento y situación legal requieren confirmación.",
+  "provider_name": "ISERVIYET S.R.LTDA",
+  "location": "Quives, Lima, Perú",
+  "area_options_m2": [100,120,180,200],
+  "price_minor": null,
+  "currency": "PEN",
+  "commission_model": "TO_CONFIRM",
+  "commission_value": null,
+  "cta": {
+    "type": "LEAD_FORM",
+    "label": "Solicitar información",
+    "route": "marketplace/property-villa-santa-rosita-quives"
+  },
+  "source_ref": "approved-commercial-source",
+  "updated_at": null
+}

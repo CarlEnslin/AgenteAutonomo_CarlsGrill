@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infinity.local/schemas/marketplace-listing.schema.json",
+  "title": "INFINITY Marketplace Listing",
+  "type": "object",
+  "required": ["id","title","kind","category","status","visibility","source_status"],
+  "properties": {
+    "id": {"type":"string","minLength":1},
+    "title": {"type":"string","minLength":1},
+    "kind": {"enum":["property","product","service","experience"]},
+    "category": {"enum":["tourism","realestate","outdoor","dental","events","professionals"]},
+    "status": {"enum":["AVAILABLE","TO_CONFIRM","DRAFT","HIDDEN"]},
+    "visibility": {"enum":["PUBLIC","TENANT","PRIVATE"]},
+    "source_status": {"enum":["VERIFIED","SOURCE_ONLY","NEEDS_CONFIRMATION","STALE"]},
+    "summary": {"type":"string"},
+    "provider_name": {"type":"string"},
+    "location": {"type":"string"},
+    "area_options_m2": {
+      "type":"array",
+      "items":{"type":"number","exclusiveMinimum":0},
+      "uniqueItems":true
+    },
+    "price_minor": {"type":["integer","null"],"minimum":0},
+    "currency": {"type":["string","null"],"pattern":"^[A-Z]{3}$"},
+    "commission_model": {"enum":["NONE","PERCENT","FIXED","TO_CONFIRM"]},
+    "commission_value": {"type":["number","null"],"minimum":0},
+    "cta": {
+      "type":"object",
+      "properties":{
+        "type":{"enum":["OPEN_DETAIL","LEAD_FORM","WHATSAPP","BOOK","QUOTE"]},
+        "label":{"type":"string"},
+        "route":{"type":["string","null"]}
+      },
+      "required":["type","label"]
+    },
+    "source_ref": {"type":["string","null"]},
+    "updated_at": {"type":["string","null"],"format":"date-time"}
+  },
+  "additionalProperties": true
+}

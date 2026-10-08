@@ -1,0 +1,35 @@
+{
+  "id": "infinity-marketplace",
+  "version": 1,
+  "route": "marketplace",
+  "navigation": {
+    "label": "Marketplace",
+    "icon": "🛍",
+    "section": "primary",
+    "priority": 10,
+    "persistent": true
+  },
+  "authorization": {
+    "requiredCapability": "marketplace:view",
+    "tenantDataIsolation": true
+  },
+  "hostContract": {
+    "renderFunction": "window.InfinityMarketplace.render",
+    "navFunction": "window.InfinityMarketplace.navItem",
+    "networkCalls": false,
+    "credentials": false
+  },
+  "catalogEntryMinimum": [
+    "id",
+    "title",
+    "kind",
+    "category",
+    "status"
+  ],
+  "statusPolicy": [
+    "AVAILABLE",
+    "TO_CONFIRM",
+    "DRAFT",
+    "HIDDEN"
+  ]
+}
