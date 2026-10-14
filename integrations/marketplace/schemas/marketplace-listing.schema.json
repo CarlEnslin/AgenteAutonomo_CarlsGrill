@@ -44,7 +44,8 @@
         "AVAILABLE",
         "TO_CONFIRM",
         "DRAFT",
-        "HIDDEN"
+        "HIDDEN",
+        "RESERVATION_ONLY"
       ]
     },
     "visibility": {
