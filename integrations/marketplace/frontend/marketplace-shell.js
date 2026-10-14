@@ -225,7 +225,7 @@
       const card = node('article', 'im-card');
       const top = node('div', 'im-card-top');
       const kind = entry.kind === 'property' ? 'Propiedad'
-        : entry.kind === 'service' ? 'Servicio'
+        : entry.kind === 'service' ? (entry.category === 'tourism' ? 'Experiencia' : 'Servicio')
         : entry.kind === 'experience' ? 'Experiencia'
         : 'Producto';
       top.append(
@@ -262,6 +262,7 @@
 
       const footer = node('div', 'im-card-footer');
       const status = entry.status === 'AVAILABLE' ? 'Disponible'
+        : entry.status === 'RESERVATION_ONLY' ? 'Solo con reserva (por confirmar)'
         : entry.status === 'TO_CONFIRM' ? 'Por confirmar'
         : entry.status === 'DRAFT' ? 'Borrador'
         : 'Revisar';
