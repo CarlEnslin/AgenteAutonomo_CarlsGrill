@@ -160,3 +160,21 @@ El responsable comercial confirmó expresamente la vigencia de las tarifas de tu
 La comprobación HTTP del 14/10/2026 mostró `/marketplace`, `/saas-assets/public-marketplace.js` y `/marketplace-data.json` con estado 200; el JSON publicó los seis importes, `source_status=VERIFIED` y `RESERVATION_ONLY`. Esto **no prueba** carga gráfica en todos los dispositivos ni despliegue del componente de este PR. La rama permanece en borrador pendiente de validar imágenes y adaptación.
 
 Respaldo del servidor: directorio privado `/opt/infinity-unified/ops/tourism-price-confirmation-20261014` (no incluir su contenido en GitHub).
+
+### Corrección de cuatrimotos (14/10/2026)
+
+El responsable confirmó una modalidad explícita por ocupación sobre una única cuatrimoto:
+- **Una persona / una cuatrimoto:** S/30.
+- **Dos personas / la misma cuatrimoto:** S/50. No son dos vehículos.
+
+El catálogo real mantiene el identificador `experience:quives-cuatrimotos` y añade `price_variants` (`base`, `two_riders`). El cotizador conserva un registro de tarifa por modalidad: S/30 y S/50, sin «Desde». Ambas siguen en estado `RESERVATION_ONLY`. La modalidad compartida requiere unidad habilitada para dos ocupantes, recorrido y duración confirmados, operador responsable y disponibilidad. No se confirmó cupo ni se creó una reserva.
+
+El componente de este repositorio presenta el desglose autorizado sin alterar la fuente de verdad ni inventar contratos de operadores.
+
+### Prospectos restaurantes — fuera del catálogo público
+
+Se investigaron **Rica Pachamanca** y **El Ruco Cuy** en Carabayllo. Se encontraron listados públicos, no cartas oficiales completas con precios por plato. No se pueden importar los rangos generales de consumo de los directorios como precios individuales ni reproducir fotografías/cartas sin permiso.
+
+Ambos se registraron como `CANDIDATE` en el módulo privado **Proveedores y aliados** de Carl's Grill Santa Rosa de Quives; cada uno tiene oferta `DRAFT` con comisión **propuesta, no aceptada, del 8%** sobre ventas elegibles realmente cobradas, prestadas y atribuibles. Los contratos individuales están archivados de forma privada en INFINITY, en estado `pending` y sin firmas. **No crear usuarios de esos restaurantes, no publicar sus catálogos como socios, no emitir comisiones ni iniciar pilotos hasta obtener consentimiento, datos tributarios, carta y acuerdo firmado.**
+
+El repositorio GitHub solo contiene esquemas y muestras sintéticas: los contratos y datos de prospección permanecen en el host privado.
