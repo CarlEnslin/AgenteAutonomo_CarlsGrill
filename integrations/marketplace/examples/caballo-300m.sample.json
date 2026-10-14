@@ -3,22 +3,24 @@
   "title": "Paseo a caballo — 300 metros",
   "kind": "service",
   "category": "tourism",
-  "status": "TO_CONFIRM",
+  "status": "RESERVATION_ONLY",
   "visibility": "TENANT",
-  "source_status": "STALE",
+  "source_status": "VERIFIED",
   "summary": "Recorrido a caballo de aproximadamente 300 metros entre ida y vuelta.",
   "provider_name": "Fundo Santa Rosa de Quives",
   "location": "Santa Rosa de Quives, Lima, Perú",
-  "price_minor": null,
+  "price_minor": 4000,
   "currency": "PEN",
   "price_unit": "persona",
-  "conditions_public": "Consultar guía, horario, condiciones y disponibilidad.",
+  "conditions_public": "Precio vigente; reserva, horario y disponibilidad se confirman antes de prestar el servicio.",
   "images": [],
   "sample_only": true,
   "cta": {
     "type": "QUOTE",
     "label": "Consultar disponibilidad"
   },
-  "source_ref": null,
-  "updated_at": null
+  "source_ref": "Ratificación comercial autorizada · 14/10/2026",
+  "updated_at": null,
+  "price_from": false,
+  "price_confirmed_on": "2026-10-14"
 }
