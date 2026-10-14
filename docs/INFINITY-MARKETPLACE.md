@@ -133,3 +133,11 @@ El catálogo puede conservar valores en `price_minor` como **referencia históri
 El catálogo no incluye actualmente una lista `images` en las fichas turísticas consultadas. El adaptador visual deberá obtener imágenes solo de la biblioteca multimedia de INFINITY con derechos de uso y aprobación por negocio, preservando originales y correcciones humanas.
 
 Un HTTP 200 en la ruta pública no acredita que este componente GitHub esté cargado, ni que funcione la experiencia móvil y el aislamiento por tenant. Los cambios de esta rama aún necesitan pruebas y despliegue por separado.
+
+### Frontends productivos distintos — requisito para despliegue
+
+La ruta pública `/marketplace` utiliza su propio `public-marketplace.js` y `public-marketplace.css`, no el archivo `marketplace-shell.js` de esta propuesta. La vista interna también mantiene `marketplace.js`, `marketplace.css` y la integración con el editor de fotos.
+
+El frontend público consume `/marketplace-data.json` y utiliza `image_url`, `gallery` y `flyer_gallery` con validación de rutas de medios. **No sustituir esas reglas con URLs arbitrarias**. El adaptador de esta propuesta debe proyectar solo fotografías aprobadas a `images`, con `mobile_src` cuando exista una variante vertical autorizada. La implementación final debe mantener la galería y el editor ya existentes.
+
+**Hallazgo pendiente:** en el JavaScript público observado, la presentación monetaria parte de `price_minor` sin condicionar el importe a `source_status=VERIFIED`. Antes de considerar terminada la publicación, corregir esta regla tanto en la salida pública autorizada como en la UI, sin borrar los antecedentes comerciales internos, y verificar con pruebas anónimas que los importes no confirmados no se ofrezcan como precios vigentes. Este PR no modifica ese frontend productivo.
