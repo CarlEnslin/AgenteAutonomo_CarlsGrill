@@ -1,7 +1,7 @@
 {
   "id": "sample-tourism-caballo-tres-vueltas",
   "title": "Paseo a caballo — tres vueltas",
-  "kind": "experience",
+  "kind": "service",
   "category": "tourism",
   "status": "TO_CONFIRM",
   "visibility": "TENANT",
