@@ -1,0 +1,24 @@
+{
+  "id": "sample-tourism-caballo-tres-vueltas",
+  "title": "Paseo a caballo — tres vueltas",
+  "kind": "experience",
+  "category": "tourism",
+  "status": "TO_CONFIRM",
+  "visibility": "TENANT",
+  "source_status": "STALE",
+  "summary": "Paseo corto a caballo; condiciones y disponibilidad por confirmar.",
+  "provider_name": "Fundo Santa Rosa de Quives",
+  "location": "Santa Rosa de Quives, Lima, Perú",
+  "price_minor": null,
+  "currency": "PEN",
+  "price_unit": "persona",
+  "conditions_public": "Consultar guía, participantes, horario y reserva anticipada.",
+  "images": [],
+  "sample_only": true,
+  "cta": {
+    "type": "QUOTE",
+    "label": "Consultar disponibilidad"
+  },
+  "source_ref": null,
+  "updated_at": null
+}

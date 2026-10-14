@@ -3,38 +3,213 @@
   "$id": "https://infinity.local/schemas/marketplace-listing.schema.json",
   "title": "INFINITY Marketplace Listing",
   "type": "object",
-  "required": ["id","title","kind","category","status","visibility","source_status"],
+  "required": [
+    "id",
+    "title",
+    "kind",
+    "category",
+    "status",
+    "visibility",
+    "source_status"
+  ],
   "properties": {
-    "id": {"type":"string","minLength":1},
-    "title": {"type":"string","minLength":1},
-    "kind": {"enum":["property","product","service","experience"]},
-    "category": {"enum":["tourism","realestate","outdoor","dental","events","professionals"]},
-    "status": {"enum":["AVAILABLE","TO_CONFIRM","DRAFT","HIDDEN"]},
-    "visibility": {"enum":["PUBLIC","TENANT","PRIVATE"]},
-    "source_status": {"enum":["VERIFIED","SOURCE_ONLY","NEEDS_CONFIRMATION","STALE"]},
-    "summary": {"type":"string"},
-    "provider_name": {"type":"string"},
-    "location": {"type":"string"},
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "enum": [
+        "property",
+        "product",
+        "service",
+        "experience"
+      ]
+    },
+    "category": {
+      "enum": [
+        "tourism",
+        "realestate",
+        "outdoor",
+        "dental",
+        "events",
+        "professionals"
+      ]
+    },
+    "status": {
+      "enum": [
+        "AVAILABLE",
+        "TO_CONFIRM",
+        "DRAFT",
+        "HIDDEN"
+      ]
+    },
+    "visibility": {
+      "enum": [
+        "PUBLIC",
+        "TENANT",
+        "PRIVATE"
+      ]
+    },
+    "source_status": {
+      "enum": [
+        "VERIFIED",
+        "SOURCE_ONLY",
+        "NEEDS_CONFIRMATION",
+        "STALE"
+      ]
+    },
+    "summary": {
+      "type": "string"
+    },
+    "provider_name": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
     "area_options_m2": {
-      "type":"array",
-      "items":{"type":"number","exclusiveMinimum":0},
-      "uniqueItems":true
-    },
-    "price_minor": {"type":["integer","null"],"minimum":0},
-    "currency": {"type":["string","null"],"pattern":"^[A-Z]{3}$"},
-    "commission_model": {"enum":["NONE","PERCENT","FIXED","TO_CONFIRM"]},
-    "commission_value": {"type":["number","null"],"minimum":0},
-    "cta": {
-      "type":"object",
-      "properties":{
-        "type":{"enum":["OPEN_DETAIL","LEAD_FORM","WHATSAPP","BOOK","QUOTE"]},
-        "label":{"type":"string"},
-        "route":{"type":["string","null"]}
+      "type": "array",
+      "items": {
+        "type": "number",
+        "exclusiveMinimum": 0
       },
-      "required":["type","label"]
+      "uniqueItems": true
     },
-    "source_ref": {"type":["string","null"]},
-    "updated_at": {"type":["string","null"],"format":"date-time"}
+    "price_minor": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "currency": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Z]{3}$"
+    },
+    "commission_model": {
+      "enum": [
+        "NONE",
+        "PERCENT",
+        "FIXED",
+        "TO_CONFIRM"
+      ]
+    },
+    "commission_value": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "cta": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "OPEN_DETAIL",
+            "LEAD_FORM",
+            "WHATSAPP",
+            "BOOK",
+            "QUOTE"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "route": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "label"
+      ]
+    },
+    "source_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "price_unit": {
+      "type": "string",
+      "description": "Public price unit, e.g. persona or hora. Only displayed with verified prices."
+    },
+    "conditions_public": {
+      "type": "string",
+      "description": "Publicly approved short conditions, never private operator notes."
+    },
+    "images": {
+      "type": "array",
+      "description": "Host-filtered approved public media; empty arrays are valid. Store media IDs and permissions outside public fixtures.",
+      "items": {
+        "type": "object",
+        "required": [
+          "src",
+          "approved"
+        ],
+        "properties": {
+          "src": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Host-approved HTTPS URL or same-origin absolute path."
+          },
+          "mobile_src": {
+            "type": "string",
+            "description": "Optional approved portrait/mobile rendition."
+          },
+          "alt": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "photo",
+              "poster"
+            ]
+          },
+          "fit": {
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "orientation": {
+            "enum": [
+              "portrait",
+              "landscape",
+              "wide",
+              "square"
+            ]
+          },
+          "approved": {
+            "const": true,
+            "description": "Explicit approval granted by authorized media curator."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "sample_only": {
+      "type": "boolean",
+      "description": "Example fixture; must never be imported as a live listing."
+    }
   },
   "additionalProperties": true
 }

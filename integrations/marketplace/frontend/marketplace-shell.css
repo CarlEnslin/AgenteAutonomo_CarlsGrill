@@ -33,3 +33,28 @@
 .im-note strong{color:var(--im-amber);white-space:nowrap}.im-note span{font-size:12px;line-height:1.6;color:#d7c9b7}
 @media(max-width:1050px){.im-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.im-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.im-masthead{align-items:start;flex-direction:column}}
 @media(max-width:640px){.im-grid{grid-template-columns:1fr}.im-stats{gap:10px}.im-stat{padding:14px}.im-stat strong{font-size:24px}.im-masthead h1{font-size:38px}.im-actions{width:100%}.im-actions .im-button{flex:1}.im-note{flex-direction:column}}
+
+
+/* Opt-in responsive imagery. Unapproved/missing assets generate no image. */
+.im-media{width:100%;aspect-ratio:4/3;overflow:hidden;background:#182a39}
+.im-media[data-orientation=portrait]{aspect-ratio:3/4}
+.im-media[data-orientation=square]{aspect-ratio:1}
+.im-media[data-orientation=wide]{aspect-ratio:16/10}
+.im-media-button{display:block;width:100%;height:100%;padding:0;border:0;background:transparent;cursor:zoom-in}
+.im-media-button:focus-visible{outline:3px solid var(--im-amber);outline-offset:-3px}
+.im-media picture,.im-media img{display:block;width:100%;height:100%}
+.im-media img{object-fit:cover;object-position:center}
+.im-media[data-fit=contain] img{object-fit:contain}
+.im-conditions{line-height:1.5;color:var(--im-muted)}
+.im-lightbox{border:1px solid #385065;border-radius:14px;padding:12px;background:#0a1620;color:#eef5fa;max-width:min(96vw,1200px);max-height:95dvh;box-shadow:0 16px 55px #0009}
+.im-lightbox::backdrop{background:#000c}
+.im-lightbox-close{display:block;margin:0 0 10px auto}
+.im-lightbox-viewport{max-width:100%;max-height:80dvh;overflow:auto;overscroll-behavior:contain}
+.im-lightbox-viewport picture{display:block}
+.im-lightbox-viewport img{display:block;object-fit:contain;max-width:100%;width:auto;height:auto;max-height:80dvh;margin:auto}
+@media(max-width:640px){
+  .im-media[data-fit=contain]{aspect-ratio:4/5}
+  .im-media[data-orientation=portrait]{aspect-ratio:3/4}
+  .im-media[data-orientation=wide][data-fit=cover]{aspect-ratio:16/11}
+  .im-lightbox-viewport .im-preview-poster{max-width:none;width:max(100%,720px);max-height:none}
+}

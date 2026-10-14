@@ -1,0 +1,24 @@
+{
+  "id": "sample-tourism-cuatrimotos",
+  "title": "Paseo en cuatrimoto",
+  "kind": "experience",
+  "category": "tourism",
+  "status": "TO_CONFIRM",
+  "visibility": "TENANT",
+  "source_status": "STALE",
+  "summary": "Experiencia de cuatrimotos sujeta a confirmación de recorrido, duración y operador.",
+  "provider_name": "Fundo Santa Rosa de Quives",
+  "location": "Santa Rosa de Quives, Lima, Perú",
+  "price_minor": null,
+  "currency": "PEN",
+  "price_unit": "persona",
+  "conditions_public": "Confirmar tarifa final, horario, recorrido, requisitos y disponibilidad.",
+  "images": [],
+  "sample_only": true,
+  "cta": {
+    "type": "QUOTE",
+    "label": "Consultar disponibilidad"
+  },
+  "source_ref": null,
+  "updated_at": null
+}
