@@ -123,3 +123,13 @@ El componente solo presenta `price_minor` cuando **simultáneamente** `status=AV
 4. Integrar CSS/JS en la ruta existente del anfitrión, tras validar sesión y `marketplace:view`; filtrar datos de cada tenant en servidor y no pasar registros privados al navegador.
 5. Probar en una instalación de ensayo: móvil 320–640 px, imagen vertical/horizontal, carteles con texto, ausencia de imagen, precios caducados, vistas sin permisos, cambio de tenant, cierre de sesión y enlaces de las fichas existentes.
 6. Desplegar únicamente tras aprobación de catálogo y fotografías; comprobar HTTP, fichas, rutas, galería, consultas y trazabilidad en producción. Sin acceso a la aplicación real, **el repositorio no acredita esta integración**.
+
+### Compatibilidad con el catálogo productivo observado
+
+Las actividades del catálogo existente usan `kind: "service"` y `status: "RESERVATION_ONLY"`. Este componente ahora muestra las actividades de turismo como «Experiencia» y el estado como «Solo con reserva (por confirmar)». No implica disponibilidad de operadores, horarios ni recursos.
+
+El catálogo puede conservar valores en `price_minor` como **referencia histórica** junto a `source_status: "NEEDS_CONFIRMATION"`. En este caso, el componente oculta el importe hasta que el anfitrión obtenga y registre una verificación comercial vigente. No modificar precios internos ni sus fuentes al adaptar la vista.
+
+El catálogo no incluye actualmente una lista `images` en las fichas turísticas consultadas. El adaptador visual deberá obtener imágenes solo de la biblioteca multimedia de INFINITY con derechos de uso y aprobación por negocio, preservando originales y correcciones humanas.
+
+Un HTTP 200 en la ruta pública no acredita que este componente GitHub esté cargado, ni que funcione la experiencia móvil y el aislamiento por tenant. Los cambios de esta rama aún necesitan pruebas y despliegue por separado.
