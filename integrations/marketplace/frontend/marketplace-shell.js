@@ -255,6 +255,17 @@
           : 'Tarifa por confirmar';
         meta.append(node('span', 'im-price im-price-pending', text));
       }
+      if (entry.source_status === 'VERIFIED' &&
+          (entry.status === 'AVAILABLE' || entry.status === 'RESERVATION_ONLY') &&
+          Array.isArray(entry.price_variants)) {
+        entry.price_variants
+          .filter(v => v && Number.isSafeInteger(v.amount_minor) && v.amount_minor >= 0 &&
+            typeof v.label === 'string' && v.label.trim())
+          .slice(0, 5).forEach(v => {
+            const amount = formatMoney(v.amount_minor, v.currency || entry.currency || 'PEN');
+            meta.append(node('span', 'im-variant-price', v.label + ': ' + amount));
+          });
+      }
       if (typeof entry.conditions_public === 'string' && entry.conditions_public.trim()) {
         meta.append(node('span', 'im-conditions', entry.conditions_public));
       }
