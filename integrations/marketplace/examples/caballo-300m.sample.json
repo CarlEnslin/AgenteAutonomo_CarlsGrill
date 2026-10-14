@@ -1,7 +1,7 @@
 {
   "id": "sample-tourism-caballo-300m",
   "title": "Paseo a caballo — 300 metros",
-  "kind": "experience",
+  "kind": "service",
   "category": "tourism",
   "status": "TO_CONFIRM",
   "visibility": "TENANT",
