@@ -6,12 +6,12 @@
   "status": "RESERVATION_ONLY",
   "visibility": "TENANT",
   "source_status": "VERIFIED",
-  "summary": "Experiencia de cuatrimotos sujeta a confirmación de recorrido, duración y operador.",
+  "summary": "Tarifas ratificadas: S/30 por una persona o S/50 por dos personas que comparten la misma cuatrimoto.",
   "provider_name": "Fundo Santa Rosa de Quives",
   "location": "Santa Rosa de Quives, Lima, Perú",
   "price_minor": 3000,
   "currency": "PEN",
-  "conditions_public": "Desde el importe indicado; confirmar recorrido, duración, operador y disponibilidad.",
+  "conditions_public": "La modalidad de dos personas requiere unidad apta para dos ocupantes. Horario, duración, recorrido, operador y disponibilidad se coordinan antes de reservar.",
   "images": [],
   "sample_only": true,
   "cta": {
@@ -20,6 +20,25 @@
   },
   "source_ref": "Ratificación comercial autorizada · 14/10/2026",
   "updated_at": null,
-  "price_from": true,
-  "price_confirmed_on": "2026-10-14"
+  "price_from": false,
+  "price_confirmed_on": "2026-10-14",
+  "price_unit": "cuatrimoto",
+  "price_variants": [
+    {
+      "id": "base",
+      "passengers": 1,
+      "vehicles": 1,
+      "label": "Una persona en una cuatrimoto",
+      "amount_minor": 3000,
+      "currency": "PEN"
+    },
+    {
+      "id": "two_riders",
+      "passengers": 2,
+      "vehicles": 1,
+      "label": "Dos personas en la misma cuatrimoto",
+      "amount_minor": 5000,
+      "currency": "PEN"
+    }
+  ]
 }
