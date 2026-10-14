@@ -222,6 +222,48 @@
       ],
       "format": "date",
       "description": "Explicit confirmation date from authorized business operator; not a reservation or availability guarantee."
+    },
+    "price_variants": {
+      "type": "array",
+      "description": "Explicitly approved current pricing modalities on one listing; two riders share one vehicle where vehicles=1.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "amount_minor",
+          "currency",
+          "passengers",
+          "vehicles"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 3
+          },
+          "amount_minor": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "passengers": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "vehicles": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "additionalProperties": false
+      }
     }
   },
   "additionalProperties": true
