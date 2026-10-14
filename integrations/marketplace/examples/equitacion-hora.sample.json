@@ -3,22 +3,24 @@
   "title": "Equitación y alta escuela — una hora",
   "kind": "service",
   "category": "tourism",
-  "status": "TO_CONFIRM",
+  "status": "RESERVATION_ONLY",
   "visibility": "TENANT",
-  "source_status": "STALE",
+  "source_status": "VERIFIED",
   "summary": "Experiencia de equitación sujeta a disponibilidad del instructor y caballo.",
   "provider_name": "Fundo Santa Rosa de Quives",
   "location": "Santa Rosa de Quives, Lima, Perú",
-  "price_minor": null,
+  "price_minor": 10000,
   "currency": "PEN",
   "price_unit": "hora",
-  "conditions_public": "Confirmar instructor, condiciones, horario y cupos.",
+  "conditions_public": "Precio vigente; instructor, horario y disponibilidad se confirman antes de reservar.",
   "images": [],
   "sample_only": true,
   "cta": {
     "type": "QUOTE",
     "label": "Consultar disponibilidad"
   },
-  "source_ref": null,
-  "updated_at": null
+  "source_ref": "Ratificación comercial autorizada · 14/10/2026",
+  "updated_at": null,
+  "price_from": false,
+  "price_confirmed_on": "2026-10-14"
 }
