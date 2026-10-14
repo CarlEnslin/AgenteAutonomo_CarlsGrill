@@ -1,7 +1,7 @@
 {
   "id": "sample-tourism-equitacion-hora",
   "title": "Equitación y alta escuela — una hora",
-  "kind": "experience",
+  "kind": "service",
   "category": "tourism",
   "status": "TO_CONFIRM",
   "visibility": "TENANT",
