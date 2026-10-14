@@ -79,7 +79,7 @@ El host real de INFINITY debe:
 
 ## Experiencias turísticas y evidencias (propuesta de integración, sin despliegue)
 
-Se agregan **cinco fichas de muestra independientes**: cuatrimotos, paseo a caballo de tres vueltas, paseo de 300 m, cabalgata de 2.500 m con entrada al río y equitación de una hora. Están en `integrations/marketplace/examples/` y están marcadas `sample_only: true`. **No son registros del servidor** y sus identificadores de ejemplo no se deben importar. Sus importes son `null`; referencias comerciales antiguas, aunque documentadas, no son automáticamente tarifas vigentes.
+Se agregan **seis fichas de muestra independientes**: cuatrimotos, canopy, paseo a caballo de tres vueltas, paseo de 300 m, cabalgata de 2.500 m con entrada al río y equitación de una hora. Están en `integrations/marketplace/examples/` y están marcadas `sample_only: true`. **No son registros del servidor** y sus identificadores de ejemplo no se deben importar. Sus tarifas de muestra reflejan la confirmación expresa del responsable el **14/10/2026**, sin trasladar datos de reservas ni operadores.
 
 El sistema anfitrión conserva el identificador real de cada actividad, los enlaces antiguos, sus variantes y los permisos de negocio. **Primero consultar el catálogo real y cotejar IDs/slugs, después actualizar por ID en vez de agregar nuevas fichas**. No sobrescribir ni volver a importar las actividades que ya existan.
 
@@ -113,7 +113,7 @@ El sistema anfitrión conserva el identificador real de cada actividad, los enla
 
 ### Política de precios y reservas
 
-El componente solo presenta `price_minor` cuando **simultáneamente** `status=AVAILABLE`, `source_status=VERIFIED` y el importe es un entero no negativo. `price_unit` es texto público aprobado que se anexa únicamente junto al importe verificable. En los demás casos se muestra «Tarifa por confirmar», o «Referencia histórica: confirmar tarifa» para `STALE`. Las notas de operación que sean publicables se pasan como `conditions_public`. Esas etiquetas no prueban cupos ni reserva. El host valida fechas, fuente, unidad, condiciones, disponibilidad y acceso.
+El componente solo presenta `price_minor` cuando **simultáneamente** `status=AVAILABLE` o `status=RESERVATION_ONLY`, `source_status=VERIFIED` y el importe es un entero no negativo. `price_from=true` indica «Desde»; `price_unit` se añade únicamente junto al importe autorizado. La publicación del precio **no confirma reserva ni disponibilidad**. En los demás casos se muestra «Tarifa por confirmar», o «Referencia histórica: confirmar tarifa» para `STALE`. Las notas de operación que sean publicables se pasan como `conditions_public`. Esas etiquetas no prueban cupos ni reserva. El host valida fechas, fuente, unidad, condiciones, disponibilidad y acceso.
 
 ### Pasos para quantumrestoai.com
 
@@ -141,3 +141,22 @@ La ruta pública `/marketplace` utiliza su propio `public-marketplace.js` y `pub
 El frontend público consume `/marketplace-data.json` y utiliza `image_url`, `gallery` y `flyer_gallery` con validación de rutas de medios. **No sustituir esas reglas con URLs arbitrarias**. El adaptador de esta propuesta debe proyectar solo fotografías aprobadas a `images`, con `mobile_src` cuando exista una variante vertical autorizada. La implementación final debe mantener la galería y el editor ya existentes.
 
 **Hallazgo pendiente:** en el JavaScript público observado, la presentación monetaria parte de `price_minor` sin condicionar el importe a `source_status=VERIFIED`. Antes de considerar terminada la publicación, corregir esta regla tanto en la salida pública autorizada como en la UI, sin borrar los antecedentes comerciales internos, y verificar con pruebas anónimas que los importes no confirmados no se ofrezcan como precios vigentes. Este PR no modifica ese frontend productivo.
+
+### Ratificación de tarifas comerciales · 14/10/2026
+
+El responsable comercial confirmó expresamente la vigencia de las tarifas de turismo que motivaron la actualización:
+
+| Experiencia | Tarifa confirmada |
+|---|---|
+| Paseo a caballo, 3 vueltas | S/20 por persona |
+| Paseo a caballo, 300 m (ida/vuelta) | S/40 por persona |
+| Cabalgata 2.500 m, ingreso al Río Chillón | S/60 por persona |
+| Equitación, una hora | S/100 por hora |
+| Cuatrimotos | Desde S/30; unidad, duración y operador por confirmar |
+| Canopy | Desde S/60; unidad, operador y condiciones por confirmar |
+
+**Actualización productiva separada:** se registraron las seis confirmaciones en `marketplace_catalog.json` y como nuevos registros de `commercial-evidence-r1.json` en el VPS, conservando sus antecedentes históricos y estado `RESERVATION_ONLY`. Se ajustaron `public-marketplace.js` y `marketplace.js` de la aplicación anfitriona para mostrar unidades y el prefijo «Desde»; esas versiones **no pertenecen a este repositorio**.
+
+La comprobación HTTP del 14/10/2026 mostró `/marketplace`, `/saas-assets/public-marketplace.js` y `/marketplace-data.json` con estado 200; el JSON publicó los seis importes, `source_status=VERIFIED` y `RESERVATION_ONLY`. Esto **no prueba** carga gráfica en todos los dispositivos ni despliegue del componente de este PR. La rama permanece en borrador pendiente de validar imágenes y adaptación.
+
+Respaldo del servidor: directorio privado `/opt/infinity-unified/ops/tourism-price-confirmation-20261014` (no incluir su contenido en GitHub).
