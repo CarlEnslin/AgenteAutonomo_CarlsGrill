@@ -210,6 +210,18 @@
     "sample_only": {
       "type": "boolean",
       "description": "Example fixture; must never be imported as a live listing."
+    },
+    "price_from": {
+      "type": "boolean",
+      "description": "True when an approved current price is a starting rate (desde); exact scope must be confirmed separately."
+    },
+    "price_confirmed_on": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date",
+      "description": "Explicit confirmation date from authorized business operator; not a reservation or availability guarantee."
     }
   },
   "additionalProperties": true
