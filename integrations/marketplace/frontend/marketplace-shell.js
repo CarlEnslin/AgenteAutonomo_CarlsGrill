@@ -132,10 +132,11 @@
   function priceFor(entry, formatMoney) {
     // A recovered or historical price may be useful internally, but must
     // never become a customer-facing quote without a verified current source.
-    if (entry.status === 'AVAILABLE' && entry.source_status === 'VERIFIED' &&
+    if ((entry.status === 'AVAILABLE' || entry.status === 'RESERVATION_ONLY') &&
+        entry.source_status === 'VERIFIED' &&
         Number.isSafeInteger(entry.price_minor) && entry.price_minor >= 0) {
       const amount = formatMoney(entry.price_minor, entry.currency || 'PEN');
-      return amount + (typeof entry.price_unit === 'string' && entry.price_unit.trim()
+      return (entry.price_from === true ? 'Desde ' : '') + amount + (typeof entry.price_unit === 'string' && entry.price_unit.trim()
         ? ' / ' + entry.price_unit : '');
     }
     return null;
