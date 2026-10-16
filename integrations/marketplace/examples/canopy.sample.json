@@ -1,0 +1,25 @@
+{
+  "id": "sample-tourism-canopy",
+  "title": "Canopy",
+  "kind": "service",
+  "category": "tourism",
+  "status": "RESERVATION_ONLY",
+  "visibility": "TENANT",
+  "source_status": "VERIFIED",
+  "summary": "Experiencia de canopy coordinada con operador; precio comercial ratificado, horario y cupos sujetos a confirmación.",
+  "provider_name": "Operador de la actividad en Santa Rosa de Quives",
+  "location": "Santa Rosa de Quives, Lima, Perú",
+  "price_minor": 6000,
+  "currency": "PEN",
+  "price_from": true,
+  "price_confirmed_on": "2026-10-14",
+  "conditions_public": "Desde el importe indicado; confirmar operador, condiciones de seguridad y disponibilidad.",
+  "images": [],
+  "sample_only": true,
+  "cta": {
+    "type": "QUOTE",
+    "label": "Consultar disponibilidad"
+  },
+  "source_ref": "Ratificación comercial autorizada · 14/10/2026",
+  "updated_at": null
+}

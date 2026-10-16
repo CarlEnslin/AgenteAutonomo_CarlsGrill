@@ -1,0 +1,26 @@
+{
+  "id": "sample-tourism-cabalgata-rio",
+  "title": "Cabalgata — 2.500 metros y río Chillón",
+  "kind": "service",
+  "category": "tourism",
+  "status": "RESERVATION_ONLY",
+  "visibility": "TENANT",
+  "source_status": "VERIFIED",
+  "summary": "Recorrido ecuestre histórico con acceso al río; confirmar condiciones actuales.",
+  "provider_name": "Fundo Santa Rosa de Quives",
+  "location": "Santa Rosa de Quives, Lima, Perú",
+  "price_minor": 6000,
+  "currency": "PEN",
+  "price_unit": "persona",
+  "conditions_public": "Precio vigente; reserva, horario y disponibilidad se confirman antes de prestar el servicio.",
+  "images": [],
+  "sample_only": true,
+  "cta": {
+    "type": "QUOTE",
+    "label": "Consultar disponibilidad"
+  },
+  "source_ref": "Ratificación comercial autorizada · 14/10/2026",
+  "updated_at": null,
+  "price_from": false,
+  "price_confirmed_on": "2026-10-14"
+}

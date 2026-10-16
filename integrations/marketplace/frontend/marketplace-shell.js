@@ -46,6 +46,102 @@
     return items(catalog).filter(entry => entry && entry.status !== 'HIDDEN');
   }
 
+
+  // Media are host-filtered. Requiring explicit approval prevents a stale or
+  // imported private asset from appearing accidentally in this public UI.
+  function safeMediaUrl(raw) {
+    if (typeof raw !== 'string' || !raw.trim() || raw.startsWith('//')) return null;
+    if (!raw.startsWith('/') && !/^https:\/\//i.test(raw)) return null;
+    try {
+      const url = new URL(raw, document.baseURI);
+      const base = new URL(document.baseURI);
+      if (url.username || url.password) return null;
+      if (url.protocol !== 'https:' && !(url.protocol === 'http:' && url.origin === base.origin)) return null;
+      return url.href;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function mediaPreview(source, mobile, alt, isPoster) {
+    const dialog = node('dialog', 'im-lightbox');
+    dialog.setAttribute('aria-label', 'Fotografía ampliada');
+    const close = makeButton('Cerrar imagen', () => dialog.close());
+    close.classList.add('im-lightbox-close');
+    const viewport = node('div', 'im-lightbox-viewport');
+    const picture = node('picture');
+    if (mobile) {
+      const alternate = node('source');
+      alternate.media = '(max-width: 640px)';
+      alternate.srcset = mobile;
+      picture.append(alternate);
+    }
+    const image = node('img');
+    image.src = source;
+    image.alt = alt;
+    image.decoding = 'async';
+    image.referrerPolicy = 'no-referrer';
+    image.className = isPoster ? 'im-preview-poster' : 'im-preview-photo';
+    picture.append(image);
+    viewport.append(picture);
+    dialog.append(close, viewport);
+    dialog.addEventListener('close', () => dialog.remove(), {once:true});
+    document.body.append(dialog);
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+    else dialog.setAttribute('open', '');
+  }
+
+  function mediaFor(entry) {
+    const media = Array.isArray(entry.images) ? entry.images.find(item =>
+      item && item.approved === true && safeMediaUrl(item.src)
+    ) : null;
+    if (!media) return null;
+    const source = safeMediaUrl(media.src);
+    const mobile = safeMediaUrl(media.mobile_src);
+    const orientation = ['portrait', 'square', 'landscape', 'wide'].includes(media.orientation)
+      ? media.orientation : 'landscape';
+    const isPoster = media.kind === 'poster';
+    const fit = media.fit === 'contain' || (isPoster && media.fit !== 'cover') ? 'contain' : 'cover';
+    const alt = typeof media.alt === 'string' && media.alt.trim() ? media.alt : (entry.title || 'Fotografía de la experiencia');
+    const frame = node('div', 'im-media');
+    frame.dataset.orientation = orientation;
+    frame.dataset.fit = fit;
+    const button = node('button', 'im-media-button');
+    button.type = 'button';
+    button.setAttribute('aria-label', 'Ampliar fotografía: ' + alt);
+    const picture = node('picture');
+    if (mobile) {
+      const alternate = node('source');
+      alternate.media = '(max-width: 640px)';
+      alternate.srcset = mobile;
+      picture.append(alternate);
+    }
+    const image = node('img');
+    image.src = source;
+    image.alt = alt;
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    image.referrerPolicy = 'no-referrer';
+    picture.append(image);
+    button.append(picture);
+    button.addEventListener('click', () => mediaPreview(source, mobile, alt, isPoster));
+    frame.append(button);
+    return frame;
+  }
+
+  function priceFor(entry, formatMoney) {
+    // A recovered or historical price may be useful internally, but must
+    // never become a customer-facing quote without a verified current source.
+    if ((entry.status === 'AVAILABLE' || entry.status === 'RESERVATION_ONLY') &&
+        entry.source_status === 'VERIFIED' &&
+        Number.isSafeInteger(entry.price_minor) && entry.price_minor >= 0) {
+      const amount = formatMoney(entry.price_minor, entry.currency || 'PEN');
+      return (entry.price_from === true ? 'Desde ' : '') + amount + (typeof entry.price_unit === 'string' && entry.price_unit.trim()
+        ? ' / ' + entry.price_unit : '');
+    }
+    return null;
+  }
+
   function render({
     catalog,
     navigate,
@@ -130,7 +226,7 @@
       const card = node('article', 'im-card');
       const top = node('div', 'im-card-top');
       const kind = entry.kind === 'property' ? 'Propiedad'
-        : entry.kind === 'service' ? 'Servicio'
+        : entry.kind === 'service' ? (entry.category === 'tourism' ? 'Experiencia' : 'Servicio')
         : entry.kind === 'experience' ? 'Experiencia'
         : 'Producto';
       top.append(
@@ -138,6 +234,8 @@
         node('span', 'im-kind', kind)
       );
       card.append(top);
+      const media = mediaFor(entry);
+      if (media) card.append(media);
 
       const body = node('div', 'im-card-body');
       body.append(
@@ -148,16 +246,35 @@
       const meta = node('div', 'im-meta');
       if (entry.location) meta.append(node('span', '', `📍 ${entry.location}`));
       if (entry.provider_name) meta.append(node('span', '', `Por ${entry.provider_name}`));
-      if (entry.price_minor !== undefined && entry.price_minor !== null) {
-        meta.append(node('strong', 'im-price', formatMoney(entry.price_minor, entry.currency || 'PEN')));
+      const validPrice = priceFor(entry, formatMoney);
+      if (validPrice !== null) {
+        meta.append(node('strong', 'im-price', validPrice));
       } else {
-        meta.append(node('span', 'im-price im-price-pending', 'Precio por confirmar'));
+        const text = entry.source_status === 'STALE'
+          ? 'Referencia histórica: confirmar tarifa'
+          : 'Tarifa por confirmar';
+        meta.append(node('span', 'im-price im-price-pending', text));
+      }
+      if (entry.source_status === 'VERIFIED' &&
+          (entry.status === 'AVAILABLE' || entry.status === 'RESERVATION_ONLY') &&
+          Array.isArray(entry.price_variants)) {
+        entry.price_variants
+          .filter(v => v && Number.isSafeInteger(v.amount_minor) && v.amount_minor >= 0 &&
+            typeof v.label === 'string' && v.label.trim())
+          .slice(0, 5).forEach(v => {
+            const amount = formatMoney(v.amount_minor, v.currency || entry.currency || 'PEN');
+            meta.append(node('span', 'im-variant-price', v.label + ': ' + amount));
+          });
+      }
+      if (typeof entry.conditions_public === 'string' && entry.conditions_public.trim()) {
+        meta.append(node('span', 'im-conditions', entry.conditions_public));
       }
       body.append(meta);
       card.append(body);
 
       const footer = node('div', 'im-card-footer');
       const status = entry.status === 'AVAILABLE' ? 'Disponible'
+        : entry.status === 'RESERVATION_ONLY' ? 'Solo con reserva (por confirmar)'
         : entry.status === 'TO_CONFIRM' ? 'Por confirmar'
         : entry.status === 'DRAFT' ? 'Borrador'
         : 'Revisar';
