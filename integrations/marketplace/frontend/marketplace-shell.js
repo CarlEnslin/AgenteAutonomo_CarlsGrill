@@ -42,6 +42,62 @@
     return button;
   }
 
+  // The host owns canonical URLs and authorization; never guess a private deep link.
+  async function shareItem(entry, getShareUrl) {
+    if (typeof getShareUrl !== 'function') return;
+    const url = getShareUrl(entry);
+    if (typeof url !== 'string' || !/^https:\/\//i.test(url)) return;
+    const title = entry.title || 'INFINITY';
+    const message = title + ' — ' + url;
+    if (typeof navigator.share === 'function') {
+      try {
+        await navigator.share({title, text: title, url});
+        return;
+      } catch (error) {
+        if (error?.name === 'AbortError') return;
+      }
+    }
+    // Desktop fallback with explicit messaging and copy action.
+    const overlay = node('div', 'im-share-overlay');
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Compartir ficha');
+    const panel = node('div', 'im-share-panel');
+    const channels = [
+      ['WhatsApp', 'https://wa.me/?text=' + encodeURIComponent(message)],
+      ['Telegram', 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title)],
+      ['Facebook', 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url)],
+      ['X', 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message)],
+      ['Correo', 'mailto:?subject=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(message)]
+    ];
+    const close = () => overlay.remove();
+    panel.append(node('strong', '', 'Compartir ficha'));
+    for (const [label, href] of channels) {
+      panel.append(makeButton(label, () => {
+        if (href.startsWith('mailto:')) window.location.href = href;
+        else window.open(href, '_blank', 'noopener,noreferrer');
+      }));
+    }
+    panel.append(makeButton('Copiar enlace', async () => {
+      try {
+        await navigator.clipboard.writeText(url);
+        close();
+      } catch (_) {
+        const field = node('input');
+        field.value = url;
+        field.readOnly = true;
+        panel.append(field);
+        field.focus();
+        field.select();
+      }
+    }));
+    panel.append(makeButton('Cerrar', close));
+    overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
+    overlay.append(panel);
+    document.body.append(overlay);
+    panel.querySelector('button')?.focus();
+  }
+
   function normalizeCatalog(catalog) {
     return items(catalog).filter(entry => entry && entry.status !== 'HIDDEN');
   }
@@ -50,6 +106,7 @@
     catalog,
     navigate,
     openItem,
+    getShareUrl,
     money,
     canAccess,
     selectedCategory = 'all',
@@ -163,6 +220,9 @@
         : 'Revisar';
       footer.append(node('span', 'im-status', status));
       footer.append(makeButton('Ver ficha →', () => openItem(entry.id), true));
+      if (typeof getShareUrl === 'function') {
+        footer.append(makeButton('Compartir ↗', () => shareItem(entry, getShareUrl)));
+      }
       card.append(footer);
       grid.append(card);
     });
