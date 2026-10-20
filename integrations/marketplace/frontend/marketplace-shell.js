@@ -42,27 +42,49 @@
     return button;
   }
 
-  // The host owns canonical URLs and authorization; never guess a private deep link.
-  async function shareItem(entry, getShareUrl) {
+  // The host supplies only canonical, permitted links. The share URL is not a permission grant.
+  function shareItem(entry, getShareUrl) {
     if (typeof getShareUrl !== 'function') return;
-    const url = getShareUrl(entry);
-    if (typeof url !== 'string' || !/^https:\/\//i.test(url)) return;
+    let url;
+    try {
+      const candidate = getShareUrl(entry);
+      const parsed = new URL(candidate);
+      if (parsed.protocol !== 'https:' || parsed.username || parsed.password) return;
+      url = parsed.href;
+    } catch (_) {
+      return;
+    }
+
     const title = entry.title || 'INFINITY';
     const message = title + ' — ' + url;
-    if (typeof navigator.share === 'function') {
-      try {
-        await navigator.share({title, text: title, url});
-        return;
-      } catch (error) {
-        if (error?.name === 'AbortError') return;
-      }
-    }
-    // Desktop fallback with explicit messaging and copy action.
+    const previousFocus = document.activeElement;
     const overlay = node('div', 'im-share-overlay');
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
     overlay.setAttribute('aria-label', 'Compartir ficha');
     const panel = node('div', 'im-share-panel');
+    const close = () => {
+      overlay.removeEventListener('keydown', onKeyDown);
+      overlay.remove();
+      previousFocus?.focus?.();
+    };
+    const onKeyDown = event => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+      } else if (event.key === 'Tab') {
+        const buttons = [...panel.querySelectorAll('button')];
+        if (!buttons.length) return;
+        if (event.shiftKey && document.activeElement === buttons[0]) {
+          event.preventDefault();
+          buttons[buttons.length - 1].focus();
+        } else if (!event.shiftKey && document.activeElement === buttons[buttons.length - 1]) {
+          event.preventDefault();
+          buttons[0].focus();
+        }
+      }
+    };
+    panel.append(node('h2', 'im-share-title', 'Compartir ficha'));
     const channels = [
       ['WhatsApp', 'https://wa.me/?text=' + encodeURIComponent(message)],
       ['Telegram', 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title)],
@@ -70,28 +92,41 @@
       ['X', 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message)],
       ['Correo', 'mailto:?subject=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(message)]
     ];
-    const close = () => overlay.remove();
-    panel.append(node('strong', '', 'Compartir ficha'));
     for (const [label, href] of channels) {
       panel.append(makeButton(label, () => {
         if (href.startsWith('mailto:')) window.location.href = href;
         else window.open(href, '_blank', 'noopener,noreferrer');
       }));
     }
+    // Apps installed on the device (including other messaging platforms) are surfaced by the OS.
+    if (typeof navigator.share === 'function') {
+      panel.append(makeButton('Más aplicaciones…', async () => {
+        try { await navigator.share({title, url}); }
+        catch (error) { if (error?.name !== 'AbortError') console.warn('No se pudo abrir el menú para compartir.'); }
+      }));
+    }
     panel.append(makeButton('Copiar enlace', async () => {
       try {
+        if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
         await navigator.clipboard.writeText(url);
         close();
       } catch (_) {
-        const field = node('input');
-        field.value = url;
-        field.readOnly = true;
-        panel.append(field);
+        // Let the user copy manually without placing the private URL in any server log.
+        let field = panel.querySelector('.im-share-copy-field');
+        if (!field) {
+          field = node('input', 'im-share-copy-field');
+          field.type = 'text';
+          field.value = url;
+          field.readOnly = true;
+          field.setAttribute('aria-label', 'Enlace para copiar');
+          panel.append(field);
+        }
         field.focus();
         field.select();
       }
     }));
     panel.append(makeButton('Cerrar', close));
+    overlay.addEventListener('keydown', onKeyDown);
     overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
     overlay.append(panel);
     document.body.append(overlay);
