@@ -42,6 +42,97 @@
     return button;
   }
 
+  // The host supplies only canonical, permitted links. The share URL is not a permission grant.
+  function shareItem(entry, getShareUrl) {
+    if (typeof getShareUrl !== 'function') return;
+    let url;
+    try {
+      const candidate = getShareUrl(entry);
+      const parsed = new URL(candidate);
+      if (parsed.protocol !== 'https:' || parsed.username || parsed.password) return;
+      url = parsed.href;
+    } catch (_) {
+      return;
+    }
+
+    const title = entry.title || 'INFINITY';
+    const message = title + ' — ' + url;
+    const previousFocus = document.activeElement;
+    const overlay = node('div', 'im-share-overlay');
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Compartir ficha');
+    const panel = node('div', 'im-share-panel');
+    const close = () => {
+      overlay.removeEventListener('keydown', onKeyDown);
+      overlay.remove();
+      previousFocus?.focus?.();
+    };
+    const onKeyDown = event => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+      } else if (event.key === 'Tab') {
+        const buttons = [...panel.querySelectorAll('button')];
+        if (!buttons.length) return;
+        if (event.shiftKey && document.activeElement === buttons[0]) {
+          event.preventDefault();
+          buttons[buttons.length - 1].focus();
+        } else if (!event.shiftKey && document.activeElement === buttons[buttons.length - 1]) {
+          event.preventDefault();
+          buttons[0].focus();
+        }
+      }
+    };
+    panel.append(node('h2', 'im-share-title', 'Compartir ficha'));
+    const channels = [
+      ['WhatsApp', 'https://wa.me/?text=' + encodeURIComponent(message)],
+      ['Telegram', 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title)],
+      ['Facebook', 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url)],
+      ['X', 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message)],
+      ['Correo', 'mailto:?subject=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(message)]
+    ];
+    for (const [label, href] of channels) {
+      panel.append(makeButton(label, () => {
+        if (href.startsWith('mailto:')) window.location.href = href;
+        else window.open(href, '_blank', 'noopener,noreferrer');
+      }));
+    }
+    // Apps installed on the device (including other messaging platforms) are surfaced by the OS.
+    if (typeof navigator.share === 'function') {
+      panel.append(makeButton('Más aplicaciones…', async () => {
+        try { await navigator.share({title, url}); }
+        catch (error) { if (error?.name !== 'AbortError') console.warn('No se pudo abrir el menú para compartir.'); }
+      }));
+    }
+    panel.append(makeButton('Copiar enlace', async () => {
+      try {
+        if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+        await navigator.clipboard.writeText(url);
+        close();
+      } catch (_) {
+        // Let the user copy manually without placing the private URL in any server log.
+        let field = panel.querySelector('.im-share-copy-field');
+        if (!field) {
+          field = node('input', 'im-share-copy-field');
+          field.type = 'text';
+          field.value = url;
+          field.readOnly = true;
+          field.setAttribute('aria-label', 'Enlace para copiar');
+          panel.append(field);
+        }
+        field.focus();
+        field.select();
+      }
+    }));
+    panel.append(makeButton('Cerrar', close));
+    overlay.addEventListener('keydown', onKeyDown);
+    overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
+    overlay.append(panel);
+    document.body.append(overlay);
+    panel.querySelector('button')?.focus();
+  }
+
   function normalizeCatalog(catalog) {
     return items(catalog).filter(entry => entry && entry.status !== 'HIDDEN');
   }
@@ -50,6 +141,7 @@
     catalog,
     navigate,
     openItem,
+    getShareUrl,
     money,
     canAccess,
     selectedCategory = 'all',
@@ -163,6 +255,9 @@
         : 'Revisar';
       footer.append(node('span', 'im-status', status));
       footer.append(makeButton('Ver ficha →', () => openItem(entry.id), true));
+      if (typeof getShareUrl === 'function') {
+        footer.append(makeButton('Compartir ↗', () => shareItem(entry, getShareUrl)));
+      }
       card.append(footer);
       grid.append(card);
     });
