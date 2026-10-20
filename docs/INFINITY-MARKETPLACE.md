@@ -31,12 +31,13 @@ El componente de este repositorio **no sustituye al host productivo**. Solo ofre
 | `catalog` | Lista ya autorizada y filtrada por el host. |
 | `navigate` | Navegación interna del host. |
 | `openItem` | Abre una ficha por identificador. |
+| `getShareUrl` | Función **sincrónica y opcional** del host: genera URL HTTPS canónica y autorizada para compartir una ficha; activa el botón **Compartir** con menú de apps, correo y copiar. |
 | `money` | Formatea importes en unidades menores. |
 | `canAccess` | Comprueba capacidades del usuario. |
 | `selectedCategory` | Filtro de categoría actual. |
 | `metrics` | Conteos opcionales del catálogo. |
 
-No contiene endpoints ni realiza llamadas de red.
+No contiene endpoints ni realiza llamadas de red. El módulo no controla el inicio de sesión ni el retorno a la ficha; esa tarea corresponde al router y autenticación del host, según [contrato de enlaces, permisos y login](INFINITY-SHARE-LINKS-AUTH.md).
 
 ## Privacidad
 
@@ -74,4 +75,5 @@ El host real de INFINITY debe:
 3. aplicar `marketplace:view`;
 4. servir catálogo desde la fuente de verdad;
 5. registrar atribución, lead, oportunidad y cierre al abrir o convertir una ficha;
-6. probar desktop, móvil, cambio de tenant y cierre de sesión.
+6. probar desktop, móvil, cambio de tenant y cierre de sesión;
+7. suministrar `getShareUrl` seguro para fichas compartibles y comprobar enlaces profundos después de autenticarse.
